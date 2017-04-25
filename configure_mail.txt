@@ -1,0 +1,5 @@
+to configure mail system
+
+http://stackoverflow.com/questions/15965376/how-to-configure-xampp-to-send-mail-from-localhost
+
+go to mail settings eneble IMAP
