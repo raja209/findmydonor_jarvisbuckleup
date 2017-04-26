@@ -13,6 +13,9 @@ $_SESSION['address'] = $_POST['address'];
 $_SESSION['pincode'] = $_POST['pincode'];
 $_SESSION['mobile'] = $_POST['mobile'];
 $_SESSION['donor_gender'] = $_POST['donor_gender'];
+$_SESSION['donor_latitude'] = $_POST['lat'];
+$_SESSION['donor_longitude'] = $_POST['lng'];
+
 
 // Escape all $_POST variables to protect against SQL injections
 $first_name = $mysqli->escape_string($_POST['firstname']);
@@ -24,6 +27,9 @@ $address = $mysqli->escape_string($_POST['address']);
 $pincode = $mysqli->escape_string($_POST['pincode']);
 $mobile = $mysqli->escape_string($_POST['mobile']);
 $donor_gender = $mysqli->escape_string($_POST['donor_gender']);
+$donor_latitude = $mysqli->escape_string($_POST['lat']);
+$donor_longitude = $mysqli->escape_string($_POST['lng']);
+
 
 
 $password = $mysqli->escape_string(password_hash($_POST['password'], PASSWORD_BCRYPT));
@@ -42,8 +48,8 @@ if ( $result->num_rows > 0 ) {
 else { // Email doesn't already exist in a database, proceed...
 
     // active is 0 by DEFAULT (no need to include it here)
-    $sql = "INSERT INTO users (first_name, last_name, email, age, gender, blood_group, address, pincode, mobile, password, hash) " 
-            . "VALUES ('$first_name','$last_name','$email', '$age', '$donor_gender', '$blood_group', '$address', '$pincode', '$mobile', '$password', '$hash')";
+    $sql = "INSERT INTO users (first_name, last_name, email, age, gender, blood_group, address, pincode, latitude, longitude, mobile, password, hash) " 
+            . "VALUES ('$first_name','$last_name','$email', '$age', '$donor_gender', '$blood_group', '$address', '$pincode', '$donor_latitude', '$donor_longitude', '$mobile', '$password', '$hash')";
 
     // Add user to the database
     if ( $mysqli->query($sql) ){
