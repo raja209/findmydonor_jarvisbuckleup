@@ -9,8 +9,61 @@ session_start();
 <head>
   <title>Sign-Up/Login Form</title>
   <?php include 'css/css.html'; ?>
-</head>
+  <script src="http://maps.google.com/maps/api/js?key=AIzaSyCOZCJXpamo0-9m6neXfpieRZGw4V7MdNI&sensor=false">
+        </script>
+        <script>
+            if (navigator.geolocation)
+            {
+                navigator.geolocation.getCurrentPosition(showCurrentLocation);
+            }
+            else
+            {
+               alert("Geolocation API not supported.");
+            }
 
+            function showCurrentLocation(position)
+            {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var coords = new google.maps.LatLng(latitude, longitude);
+				document.getElementById("latbox").value = latitude;
+				document.getElementById("lngbox").value = longitude;
+
+                var mapOptions = {
+                zoom: 15,
+                center: coords,
+                mapTypeControl: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            //create the map, and place it in the HTML map div
+            map = new google.maps.Map(
+            document.getElementById("mapPlaceholder"), mapOptions
+            );
+
+            //place the initial marker
+            var marker = new google.maps.Marker({
+            position: coords,
+			draggable:true,
+            map: map,
+            title: "Current location!"
+            });
+            
+			google.maps.event.addListener(marker, 'dragend', function (event) {
+				document.getElementById("latbox").value = this.getPosition().lat();
+				document.getElementById("lngbox").value = this.getPosition().lng();
+			});
+
+			
+			}
+        </script>
+</head>
+<style>
+    #mapPlaceholder {
+        height: 180px;
+        max-width: 600px;
+		margin: 25px auto;
+    </style>
 <?php 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') 
 {
@@ -125,7 +178,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
           </div>
 		  
-		  
+		<div id="mapPlaceholder"></div>
+		
+		<div class="top-row">
+			<div class="field-wrap">
+              <input size="20" type="text" required autocomplete="off" id="latbox" name="lat" >
+            </div>
+        
+            <div class="field-wrap">
+              <input size="20" type="text" required autocomplete="off" id="lngbox" name="lng" >
+            </div>		
+        </div>
+  
 
           <div class="field-wrap">
             <label>
@@ -140,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             </label>
             <input type="text"required autocomplete="off" name='address' />
 		 </div>
-		
+		        
 		<div class="top-row">
 			<div class="field-wrap">
               <label>
