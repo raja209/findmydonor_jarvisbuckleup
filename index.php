@@ -4,7 +4,7 @@ session_start();
 ?>
 <html>
 <head>
-		<script src="http://maps.google.com/maps/api/js?sensor=false">
+		<script src="http://maps.google.com/maps/api/js?key=AIzaSyCOZCJXpamo0-9m6neXfpieRZGw4V7MdNI&sensor=false">
         </script>
         <script>
             if (navigator.geolocation)
@@ -21,6 +21,8 @@ session_start();
                 var latitude = position.coords.latitude;
                 var longitude = position.coords.longitude;
                 var coords = new google.maps.LatLng(latitude, longitude);
+				document.getElementById("latbox").value = latitude;
+				document.getElementById("lngbox").value = longitude;
 
                 var mapOptions = {
                 zoom: 15,
