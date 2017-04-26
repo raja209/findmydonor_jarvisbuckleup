@@ -8,30 +8,16 @@ $_SESSION['last_name'] = $_POST['lastname'];
 $_SESSION['age'] = $_POST['age'];
 $_SESSION['blood_group'] = $_POST['blood_group'];
 $_SESSION['pincode'] = $_POST['pincode'];
+$_SESSION['requester_latitude'] = $_POST['lat'];
+$_SESSION['requester_longitude'] = $_POST['lng'];
 
+echo $_SESSION['requester_longitude'];
 ?>
 
 
 <html>
 <head>
-<!--
-<script language="JavaScript">
 
-	function myValidation() {
-	  //Validate Donor Selection
-		var checkSel=false;
-		for(i=0;i<donorselectform.donorsCheckId[].length;i++){
-		if(donorselectform.donorsCheckId[i].checked)
-			checkSel=true;
-	}
-	if(!checkSel){
-		alert("Please select at least one donor!");	
-	return false;
-	}
-	}
-
-</script>
--->
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>MyDonorList</title>
 <link href="css/webpagestyle.css" rel="stylesheet" type="text/css" media="screen" />
@@ -103,7 +89,7 @@ $_SESSION['pincode'] = $_POST['pincode'];
 				<td><?php echo $row['last_name']?></td>
 				<td><?php echo $row['age']?></td>
 				<td><?php echo $row['gender']?></td>
-				<!--<td><input type="checkbox" name="donorsCheckId[]" value=<?php echo $row['id']; ?>--></td></tr>
+				
 			<?php	
 			}
 			?>
