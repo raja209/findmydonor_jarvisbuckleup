@@ -1,17 +1,26 @@
-<!DOCTYPE html>
+
 <?php
 session_start();
+include 'php/Requester.php';
+include 'php/Location.php';
 
 $_SESSION['email'] = $_POST['email'];
 $_SESSION['first_name'] = $_POST['firstname'];
 $_SESSION['last_name'] = $_POST['lastname'];
 $_SESSION['age'] = $_POST['age'];
 $_SESSION['blood_group'] = $_POST['blood_group'];
-$_SESSION['pincode'] = $_POST['pincode'];
-$_SESSION['requester_latitude'] = $_POST['lat'];
-$_SESSION['requester_longitude'] = $_POST['lng'];
+$_SESSION['mobile'] = $_POST['mobile'];
+$_SESSION['lat'] = $_POST['lat'];
+$_SESSION['lng'] = $_POST['lng'];
 
-echo $_SESSION['requester_longitude'];
+
+$newReq = new Requester($_SESSION['first_name'],$_SESSION['last_name'],$_SESSION['email'],$_SESSION['mobile'],
+						   $_SESSION['age'],$_SESSION['blood_group']);
+$newReq->trackLocation($_SESSION['lat'],$_SESSION['lng']);
+
+$reqLocation = new Location($_SESSION['lat'],$_SESSION['lng']);
+
+$_SESSION['newreq'] = $newReq;  
 ?>
 
 
@@ -47,17 +56,9 @@ echo $_SESSION['requester_longitude'];
 		<form name="donorselectform" action="NotifyDonors.php" method="post">
 			<?php
 				
-				$Requester_blood_group=$_POST["blood_group"];
-				$Requester_pincode=$_POST["pincode"];
-				include("db.php");
-				/*echo "$Requester_blood_group"."<br>";
-				echo "$Requester_pincode"."<br>";*/
-				$result = $mysqli->query("SELECT * FROM users where blood_group='$Requester_blood_group'")  or die($mysqli->error());
-				//$num_results = mysql_num_rows($result);
-				/*if ($num_results > 0){}
-				else{
-				header( "location: donornotfounderror.php" );
-				}*/
+				//Searching for prospective donors
+				$result = $newReq->searchBlood($newReq->bloodDetails);
+				;				
 				
 			?>
 			<style>
@@ -70,34 +71,49 @@ echo $_SESSION['requester_longitude'];
 					font-family:verdana,arial,sans-serif;
 					font-size:11px;
 			}
+			
+			}
+			.homebutton
+			{
+				padding-left: 30em;
+				
+                                border: none;
+ 
 			}
 			</style>
 			
-			<table style="font-size:12 px" class="gridtable">
-			<tr>
-			<th>Donor First Name</th>
-			<th>Donor Last Name</th>
+			<table style=" width:100%; " class="gridtable">
+			<tr style="background-color: #4CAF50; color: white; height: 35px;">
+			<th>Donor Name</th>
 			<th>Donor Age</th>
 			<th>Donor Gender</th>
+			<th>Donor Address</th>
 			</tr> 
 			<?php
-			
+			$rowcount = mysqli_num_rows($result);
+			if($rowcount>=1){
 			while($row=mysqli_fetch_array($result)){?>
 			
 				<tr>
-				<td><?php echo $row['first_name']?></td>
-				<td><?php echo $row['last_name']?></td>
-				<td><?php echo $row['age']?></td>
-				<td><?php echo $row['gender']?></td>
+				<td><center><?php echo $row['first_name'] . " ". $row['last_name']?><center></td>
+				<td><center><?php echo $row['age']?><center></td>
+				<td><center><?php echo $row['gender']?><center></td>
+				<td><center><?php echo $row['address']?><center></td>
 				
+				</tr>
 			<?php	
+			}
+			}
+			else{
+				 header( "location: donornotfounderror.php" );
 			}
 			?>
 			
 			</table>
-			
+			<br>
+			<div class="homebutton">
 			<input type="submit" value="Notify" /> 
-			
+			</div>
 		</form> 		
 	</div>
 	<!-- end #page -->
@@ -107,5 +123,6 @@ echo $_SESSION['requester_longitude'];
 	<p>Copyright &copy All rights reserved.</p>
 </div>
 <!-- end #footer -->
+
 </body>
 </html>
